@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    #div1 div{ width: 200px; height: 200px; border: 1px #000 solid; display: none; }
+    .active{ background: red; }
+  </style>
+</head>
+<body>
+  <div id="div1">
+    <input class="active" type="button" value="1">
+    <input type="button" value="2">
+    <input type="button" value="3">
+    <div style="display: block;">111</div>
+    <div>222</div>
+    <div>333</div>
+  </div>
+  <script>
+    var oParent = null
+    var aInput = null
+    var aDiv = null
+    window.onload = function(){
+      oParent = document.getElementById('div1')
+      aInput = oParent.getElementsByTagName('input')
+      aDiv = oParent.getElementsByTagName('div')
+      init()
+    }
+    function init(){
+      for (var i=0; i < aInput.length; i++) {
+        aInput[i].id = i
+        aInput[i].setAttribute('index', i) // 精华所在 这里没有使用闭包
+        aInput[i].onclick = change
+      }
+    }
+    function change(){
+      for (var j=0; j < aInput.length; j++) {
+        aInput[j].className = ''
+        aDiv[j].style.display = 'none'
+      }
+      this.className = 'active'
+      aDiv[this.getAttribute('index')].style.display = 'block'
+    }
+  </script>
+</body>
+</html>

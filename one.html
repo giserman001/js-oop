@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>创建对象</title>
+</head>
+<body>
+  <script>
+    function Student (name) {
+      this.name = name
+      this.hello = function(){
+        console.log('hello', this.name)
+      }
+    }
+    Student.prototype.bay = function(){
+      console.log('bay', this.name)
+    }
+    var xiaoming = new Student('小明')
+    console.log(xiaoming.name)
+    xiaoming.hello()
+    xiaoming.bay()
+    console.log(xiaoming.constructor === Student.prototype.constructor)
+    console.log(Student)
+  </script>
+</body>
+</html>

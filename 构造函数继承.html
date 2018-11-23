@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>创建即继承----构造函数继承</title>
+</head>
+<body>
+  <script>
+    function SuperClass(id){
+      // 值类型共有属性
+      this.id = id
+      // 引用类型共有属性
+      this.books = ['html', 'css']
+    }
+    SuperClass.prototype.showBooks = function(){
+      console.log(this)
+      console.log(this.books)
+    }
+    // 声明子类
+    function ChildClass(id){
+      // 继承父类
+      SuperClass.call(this, id)
+    }
+    var child1 = new ChildClass(1)
+    var child2 = new ChildClass(2)
+    child1.books.push('设计模式')
+    console.log(child1.id)    //1
+    console.log(child1.books) //['Html','Css','设计模式'];
+    console.log(child2.id)    //2
+    console.log(child2.books) //['Html','Css'];
+    // child1.showBooks() // 报错了
+    /*
+    * SuperClass.call(this,id)是构造函数继承的精华，call可以改变函数的作用域环境，
+    * 因此在子类中对父类调用这个方法，就是将子类的变量在父类中执行一遍，由于父类中是给
+    * this绑定属性的，因此子类也就继承了父类的公有属性，由于这种方法没有涉及原型prototype
+    * 所以父类原型方法不会被子类继承，如果想要被继承就必须放在构造函数中，这样创建出来
+    * 的每个实例都会单独拥有一份而不能共用，这样就违背了代码复用的原则。
+    * 为了综合这两种模式的优点，有了组合式继承。
+    */
+  </script>
+</body>
+</html>

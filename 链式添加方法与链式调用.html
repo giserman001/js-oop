@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>面向对象编程----链式动态给原型添加方法与链式调用</title>
+</head>
+<body>
+  <script>
+    Function.prototype.addMethod = function(name, fn){
+      this.prototype[name] = fn
+      return this
+    }
+
+    function Methods(){}
+    console.log(Methods.__proto__ === Function.prototype)
+    Methods.addMethod('checkName', function(){
+      //code
+    }).addMethod('checkEmail', function(){
+      //code
+    }).addMethod('checkPassword', function(){
+      //code
+    })
+    // 使用
+    var Check = new Methods()
+    console.log(Check)
+    Check.addMethod('test', function(){
+      console.log('test')
+    })
+    Check.checkName()
+  </script>
+</body>
+</html>

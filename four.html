@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>es6的class继承封装</title>
+</head>
+<body>
+  <script>
+    class Student {
+      constructor (props) {
+        this.name = props.name || 'liuya'
+        this.grade = props.grade || 10
+      }
+      getGrate () {
+        console.log(this.name + '的分数:' +this.grade)
+      }
+    }
+    let xiaoming = new Student({
+      name: '小明',
+      grade: 19
+    })
+    xiaoming.getGrate()
+
+
+    // 直接通过extends来实现继承
+    class PrimaryStudent extends Student {
+      constructor (obj) {
+        super(obj); // 记得用super调用父类的构造方法!
+        this.grade = obj.grade;
+      }
+      myGrade() {
+        console.log('I am at grade ' + this.grade);
+      }
+    }
+    let xiaoshuai = new PrimaryStudent({
+      name: '小帅',
+      grade: 100
+    })
+    xiaoshuai.getGrate()
+    xiaoshuai.myGrade()
+  </script>
+</body>
+</html>

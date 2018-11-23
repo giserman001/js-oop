@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    #div1 div, #div2 div {
+        width: 200px;
+        height: 200px;
+        border: 1px #000 solid;
+        display: none;
+    }
+    .active {
+        background: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="div1">
+    <input class="active" type="button" value="1">
+    <input type="button" value="2">
+    <input type="button" value="3">
+    <div style="display: block;">111</div>
+    <div>222</div>
+    <div>333</div>
+  </div>
+
+  <div id="div2">
+    <input class="active" type="button" value="1">
+    <input type="button" value="2">
+    <input type="button" value="3">
+    <div style="display: block;">111</div>
+    <div>222</div>
+    <div>333</div>
+  </div>
+  <script>
+    window.onload = function(){
+      var t1 = new Tab('div1');
+      t1.init();
+      t1.autoPlay();
+
+      var t2 = new Tab('div2');
+      t2.init();
+      t2.autoPlay();
+      setTimeout(function(){
+        t2.destory()
+      }, 5000)
+    }
+    function Tab(id){
+      this.oParent = document.getElementById(id)
+      this.aInput = this.oParent.getElementsByTagName('input')
+      this.aDiv = this.oParent.getElementsByTagName('div')
+      this.iNow = 0 // 中间变量处理是否到最后一个选项卡
+      this.timer = null
+    }
+    // 初始化
+    Tab.prototype.init = function(){
+      var _this = this
+      for(var i=0; i < this.aInput.length; i++){
+        this.aInput[i].index = i
+        this.aInput[i].onclick = function(){
+          _this.change(this) //这里的this是每一个input
+        }
+      }
+    }
+    Tab.prototype.change = function(obj){
+      for(var j=0; j < this.aInput.length; j++){
+        this.aInput[j].className = ''
+        this.aDiv[j].style.display = 'none'
+      }
+      obj.className = 'active'
+      this.aDiv[obj.index].style.display = 'block'
+    }
+    // 开启自动播放
+    Tab.prototype.autoPlay = function(){
+      var _this = this
+      _this.timer = setInterval(function(){
+        if (_this.iNow == _this.aInput.length-1) { // 关键点
+          _this.iNow = 0
+        } else {
+          _this.iNow++
+        }
+        for (var j = 0; j < _this.aInput.length; j++) {
+          _this.aInput[j].className = ''
+          _this.aDiv[j].style.display = 'none'
+        }
+        _this.aInput[_this.iNow].className = 'active'
+        _this.aDiv[_this.iNow].style.display = 'block'
+      }, 2000)
+    }
+    // 销毁定时器
+    Tab.prototype.destory = function(){
+      clearInterval(this.timer)
+    }
+  </script>
+</body>
+</html>

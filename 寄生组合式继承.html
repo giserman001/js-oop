@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2.6 终极继承者----寄生组合式继承</title>
+</head>
+<body>
+  <script>
+    /*
+    * 寄生式继承依托于原型继承，原型继承又与类式继承想象。
+    * 即： 原型与构造函数的组合继承
+    * 寄生式继承  继承原型
+    * 传递参数 childClass 子类
+    * 传递参数 parentClass 父类
+  */
+  function Student(obj) {
+    this.name = obj.name || 'Unnamed'
+  }
+  Student.prototype.hello = function () {
+    console.log('Hello, ' + this.name + '!');
+  }
+  //定义子类
+  function PrimaryStudent (props) {
+    // 调用Student构造函数，绑定this变量:
+    Student.call(this, props)
+    this.grade = props.grade || 1;
+  }
+  // 继承封装
+  function inherits(Child, Parent) {
+    var F = function () {};
+    F.prototype = Parent.prototype;
+    Child.prototype = new F();
+    console.log(Child.prototype.constructor, '测试修改之前的child构造函数')
+    Child.prototype.constructor = Child;
+  }
+  // 实现原型继承链
+  inherits(PrimaryStudent, Student)
+  // 绑定其他方法到PrimaryStudent原型
+  PrimaryStudent.prototype.getGrade = function () {
+    console.log(this.name + '分数：' + this.grade)
+    return this.grade;
+  }
+  // 创建xiaoming:
+  var xiaoming = new PrimaryStudent({
+    name: '小明',
+    grade: 2
+  })
+  xiaoming.hello()
+  xiaoming.getGrade()
+  var arr = [1,2,3];
+  for(var i=0,val; val = arr[i]; i++){
+    // 同理，三次后结束 
+    console.log(i, '我啥时结束')
+  }
+  </script>
+</body>
+</html>

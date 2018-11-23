@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>使用对象标记已弹出弹框</title>
+  <style>
+    *{ margin: 0; padding: 0; }
+    .login{ background: white; border: 1px solid green; position: absolute; left: 0; top: 0; z-index: 2;}
+    .title{ height: 30px; line-height: 30px; background: gray; color: white; }
+    .title .close{ float: right; padding-right: 10px; cursor: pointer; }
+    #mark{ background: #000; filter: alpha(opacity=30); opacity: 0.3; position: absolute; left: 0; top: 0; z-index: 1; }
+</style>
+</head>
+<body>
+  <input type="button" value="1">
+  <input type="button" value="2">
+  <input type="button" value="3">
+
+<script>
+  window.onload = function(){
+      var aInput = document.getElementsByTagName('input')
+      aInput[0].onclick = function () {
+          var d1 = new Dialog();
+          d1.init({
+              iNow: 0,                               // iNow：解决重复创建---对象标记
+              title: '登录'
+          });
+      };
+
+      aInput[1].onclick = function () {
+          var d1 = new Dialog();
+          d1.init({ 
+              iNow: 1,                              // 配置参数
+              w: 300,
+              h: 400,
+              dir: 'right',
+              title: '公告1'
+          });
+      };
+      aInput[2].onclick = function () {
+          var d1 = new Dialog();
+          d1.init({  
+              iNow: 2,                             // 配置参数
+              mark: true  // 遮罩标示
+          });
+      };
+  };
+  function Dialog(){
+    this.oLogin = null
+    this.close = null
+    this.settings = { // 默认配置参数
+      w: 300,
+      h: 300,
+      dir: 'center',
+      mark: false,
+      title: ''
+    }
+  }
+  Dialog.prototype.json = {};
+  // 初始化
+  Dialog.prototype.init = function(opt){
+    extend(this.settings, opt)
+    if (this.json[opt.iNow] == undefined) {
+      this.json[opt.iNow] = true
+    }
+    if (this.json[opt.iNow]) {
+      this.create()
+      // 判断是否需要遮罩
+      if(this.settings.mark){
+        this.createMark()
+      }
+      this.json[opt.iNow] = false // 创建结束后立马更改状态
+    }
+  }
+  // 创建背景（html）
+  Dialog.prototype.createMark = function(){
+    var oMark = document.createElement('div')
+    oMark.id = 'mark'
+    document.body.appendChild(oMark)
+    this.oMark = oMark
+    oMark.style.width = viewWidth() + 'px';
+    oMark.style.height = viewHeight() + 'px';
+  }
+  // 创建模板（html）
+  Dialog.prototype.create = function(){
+    var _this = this
+    var str = ''
+    this.oLogin = document.createElement('div')
+    this.oLogin.className = 'login'
+    str += '<div class="title">'
+    str += '<span>'+this.settings.title+'</span><span class="close">关闭</span>'
+    str += '</div>'
+    str += '<div class="content"></div>'
+    this.oLogin.innerHTML = str
+
+    document.body.appendChild(this.oLogin)
+
+    this.close = this.oLogin.getElementsByClassName('close')[0]
+
+    //添加关闭事件
+    this.close.onclick = function(e){
+      _this.shut(e)
+    }
+
+    this.setData() // 设置参数数据
+  }
+  Dialog.prototype.setData = function(){
+    // 设置弹框宽高
+    this.oLogin.style.width = this.settings.w + 'px';
+    this.oLogin.style.height = this.settings.h + 'px';
+    // 设置弹框位置
+    if(this.settings.dir == 'center'){
+      this.oLogin.style.left = (viewWidth() - this.oLogin.offsetWidth) / 2 + 'px';
+      this.oLogin.style.top = (viewHeight() - this.oLogin.offsetHeight) / 2 + 'px';
+    }else if(this.settings.dir == 'right'){
+      this.oLogin.style.left = (viewWidth() - this.oLogin.offsetWidth) + 'px';
+      this.oLogin.style.top = (viewHeight() - this.oLogin.offsetHeight) / 2 + 'px';
+    }else if(this.settings.dir == 'left'){
+      this.oLogin.style.right = (viewWidth() - this.oLogin.offsetWidth) + 'px';
+      this.oLogin.style.top = (viewHeight() - this.oLogin.offsetHeight) / 2 + 'px';
+    }
+  }
+  // 关闭弹框
+  Dialog.prototype.shut = function(){
+    document.body.removeChild(this.oLogin)
+    if(this.settings.mark){
+      document.body.removeChild(this.oMark);
+    }
+
+    this.json[this.settings.iNow] = true;
+  }
+  // 对象拷贝继承覆盖
+  function extend(obj1, obj2){
+    for (var attr in obj2) {
+      obj1[attr] = obj2[attr];
+    }
+  }
+  // 在PC端中，该值代表的是浏览器视口的宽度：
+  function viewWidth(){
+    return document.documentElement.clientWidth;
+  }
+  // 在PC端中，该值代表的是浏览器视口的高度：
+  function viewHeight(){
+    return document.documentElement.clientHeight;
+  }
+</script>
+</body>
+</html>

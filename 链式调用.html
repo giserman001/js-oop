@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>面向对象编程----链式调用</title>
+</head>
+<body>
+  <script>
+
+    // es5写法
+    var CheckObject = function(obj) {
+      this.name = obj.name
+      this.password = obj.password
+      this.Email = obj.Email
+    }
+    CheckObject.prototype = {
+      checkName:function(){
+        // code
+        console.log(this, 'checkName')
+        return this; // 链式调用必须要返回一个this
+      },
+      checkEmail:function(){
+        // code 
+        console.log(this, 'checkEmail')
+        return this;
+      },
+      checkPassword:function(){
+        // code
+        console.log(this, 'checkPassword')
+        return this;
+      }
+    }
+    var check = new CheckObject({
+      name: '小明',
+      password: '123456',
+      Email: '1522962872@qq.com'
+    })
+    check.checkName().checkEmail().checkPassword()
+
+    // es6写法
+    class CheckObject1 {
+      constructor (obj) {
+        this.name = obj.name
+        this.password = obj.password
+        this.Email = obj.Email
+      }
+      checkName(){
+        // code
+        console.log(this, 'checkName')
+        return this;
+      }
+      checkEmail(){
+        // code 
+        console.log(this, 'checkEmail')
+        return this;
+      }
+      checkPassword(){
+        // code
+        console.log(this, 'checkPassword')
+        return this;
+      }
+    }
+    let check1 = new CheckObject1({
+      name: '小明',
+      password: '123456',
+      Email: '1522962872@qq.com'
+    })
+    check1.checkName().checkEmail().checkPassword()
+  </script>
+</body>
+</html>

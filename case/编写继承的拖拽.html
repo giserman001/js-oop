@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>面向对象———拷贝继承(for-in)</title>
+  <style>
+    #div1, #div2 {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+    }
+
+    #div1 {
+        background: #c40000;
+    }
+
+    #div2 {
+        background: green;
+        left: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="div1"></div>
+  <div id="div2"></div>
+  <script>
+    window.onload = function(){
+      var t = new Drag('div2')
+      t.init()
+
+      var tChild = new DragChild('div1')
+      tChild.init()
+    }
+     // 父类拖拽没有限制范围
+    function Drag(id){
+      this.oDiv = document.getElementById(id)
+      this.disX = 0
+      this.disY = 0
+    }
+    Drag.prototype.init = function(){
+      var _this = this
+      _this.oDiv.onmousedown = function(e){
+        _this.fnDown(e)
+      }
+    }
+    Drag.prototype.fnDown = function(e){
+      var _this = this
+      this.disX = e.clientX - this.oDiv.offsetLeft
+      this.disY = e.clientY - this.oDiv.offsetTop
+      document.onmousemove = function(ev){
+        var ev = ev || window.event
+        _this.fnMove(ev)
+      }
+      document.onmouseup = this.fnUp
+      return false
+    }
+    Drag.prototype.fnMove = function(ev){
+      this.oDiv.style.left = ev.clientX - this.disX + 'px'
+      this.oDiv.style.top = ev.clientY - this.disY + 'px'
+    }
+    Drag.prototype.fnUp = function(ev){
+      document.onmousemove = null
+      document.onmouseup = null
+    }
+    function DragChild(id){
+      Drag.call(this, id) // 内部属性继承
+    }
+    extend(DragChild.prototype, Drag.prototype) // 拷贝继承
+    // 子类拖拽有限制范围
+    DragChild.prototype.fnMove = function(e){
+      var L = e.clientX - this.disX;
+      var T = e.clientY - this.disY;
+      if(L < 0){
+          L = 0
+      }else if(L > document.documentElement.clientWidth - this.oDiv.offsetWidth){
+          L = document.documentElement.clientWidth - this.oDiv.offsetWidth;
+      }
+      if(T < 0){
+          T = 0
+      }else if(T > document.documentElement.clientHeight - this.oDiv.offsetHeight){
+          T = document.documentElement.clientHeight - this.oDiv.offsetHeight;
+      }
+      this.oDiv.style.left = L + 'px';
+      this.oDiv.style.top = T + 'px';
+    }
+    function extend(obj1, obj2){
+      for (var attr in obj2) {
+        obj1[attr] = obj2[attr]
+      }
+    }
+    /*总结： 拷贝继承：通用型的 适用于有new或无new的时候都可以 类式继承：适用于new构造函数 原型继承：适用于无new的对象*/
+  </script>
+</body>
+</html>

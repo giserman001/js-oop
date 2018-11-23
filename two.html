@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>原型继承</title>
+</head>
+<body>
+  <script>
+    function Student(obj) {
+      this.name = obj.name || 'Unnamed';
+      // this.hello = function() {
+      //   console.log('Hello, ' + this.name + '?');
+      // }
+    }
+
+    Student.prototype.hello = function () {
+      console.log('Hello, ' + this.name + '!');
+    }
+    var xiaoming = new Student('小明')
+    var xiaohong = new Student('小红')
+    xiaoming.hello()
+    console.log(xiaoming.hello === xiaohong.hello)
+    /*
+      apply：调用一个对象的一个方法，用另一个对象替换当前对象。例如：B.apply(A, arguments);即A对象应用B对象的方法。
+
+      call：调用一个对象的一个方法，用另一个对象替换当前对象。例如：B.call(A,   args1,args2);即A对象调用B对象的方法。
+    */
+   
+
+
+
+    //定义子类
+    function PrimaryStudent (props) {
+      Student.call(this, props)
+      this.grade = props.grade || 1;
+    }
+
+    // 中转函数
+    function F(){}
+
+    // 把F的原型指向Student.prototype:
+    F.prototype = Student.prototype
+
+    // 把PrimaryStudent的原型指向一个新的F对象，F对象的原型正好指向Student.prototype:
+    PrimaryStudent.prototype = new F()
+
+    console.log(PrimaryStudent.prototype.constructor, '我是F吗')
+
+    // 把PrimaryStudent原型的构造函数修复为PrimaryStudent:
+    PrimaryStudent.prototype.constructor = PrimaryStudent
+
+    console.log(PrimaryStudent.prototype.constructor)
+
+    // 继续在PrimaryStudent原型（就是new F()对象）上定义方法：
+    PrimaryStudent.prototype.getGrade = function () {
+      return this.grade
+    }
+
+    // 创建xiaoming:
+    var xiaoming = new PrimaryStudent({
+      name: '小明',
+      grade: 2
+    })
+    console.log(xiaoming.name)
+    console.log(xiaoming.grade)
+    // 验证原型:
+    console.log(xiaoming)
+    console.log(xiaoming.__proto__ === PrimaryStudent.prototype); // true
+    console.log(xiaoming.__proto__.__proto__ === Student.prototype); // true
+    // 验证继承关系:
+    console.log(xiaoming instanceof PrimaryStudent); // true
+    console.log(xiaoming instanceof Student); // true
+  </script>
+</body>
+</html>

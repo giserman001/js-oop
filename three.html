@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>原型继承封装</title>
+</head>
+<body>
+  <script>
+    function Student(obj) {
+      this.name = obj.name || 'Unnamed'
+    }
+    Student.prototype.hello = function () {
+      console.log('Hello, ' + this.name + '!');
+    }
+    //定义子类
+    function PrimaryStudent (props) {
+      // 调用Student构造函数，绑定this变量:
+      Student.call(this, props)
+      this.grade = props.grade || 1;
+    }
+    // 继承封装
+    function inherits(Child, Parent) {
+      var F = function () {};
+      F.prototype = Parent.prototype;
+      Child.prototype = new F();
+      Child.prototype.constructor = Child;
+    }
+    // 实现原型继承链
+    inherits(PrimaryStudent, Student)
+    // 绑定其他方法到PrimaryStudent原型
+    PrimaryStudent.prototype.getGrade = function () {
+      console.log(this.name + '分数：' + this.grade)
+      return this.grade;
+    }
+    // 创建xiaoming:
+    var xiaoming = new PrimaryStudent({
+      name: '小明',
+      grade: 2
+    })
+    xiaoming.hello()
+    xiaoming.getGrade()
+  </script>
+</body>
+</html>

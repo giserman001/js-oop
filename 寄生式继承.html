@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>如虎添翼----寄生式继承</title>
+</head>
+<body>
+  <script>
+    /*
+  * 寄生式继承
+  * 其实就是对原型继承的第二次封装，在封装过程中对继承的对象进行了扩展。
+  * 也存在原型继承的缺点！！
+  * 这种思想的作用也是为了寄生组合式继承模式的实现。
+  */
+  //声明基对象
+  var book = {
+    name:'js book',
+    alikeBook:['Html','Css']
+  }
+  //原型式继承
+  function inheritObj(obj){
+    //声明一个过渡函数对象
+    function F(){}
+    //过渡对象的原型继承父对象
+    F.prototype = obj;
+    //返回过渡对象的一个实例，该实例的原型继承了父对象
+    return new F();
+  }
+  // 再次封装
+  function createBook(obj){
+    // 通过原型继承方式创建对象
+    var object = new inheritObj(obj)
+    console.log(object, 'object')
+    // 拓展新对象
+    object.getName = function(){
+      console.log(this.name)
+    }
+    // 返回拓展后的对象
+    return object
+  }
+  var book1 = createBook(book)
+  console.log(book1.__proto__, '我是book1')
+  book1.name = 'css'
+  book1.alikeBook.push('javascript')
+  console.log(book1.alikeBook)
+  book1.getName()
+
+  console.log('_______________________')
+  
+  var book2 = new createBook(book);
+  console.log(book2.__proto__, '我是book2')
+  book2.name = '设计模式';
+  console.log(book2.alikeBook); // ['Html','Css','javascript']
+  book2.getName();              // 设计模式
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>将优点为我所有----组合式继承</title>
+</head>
+<body>
+  <script>
+    //声明父类
+    function ParentClass(name){
+      // 值类型共有属性
+      this.name = name
+      // 引用类型共有属性
+      this.books = ['html']
+    }
+    //父类型原型公有方法
+    ParentClass.prototype.getName = function(){
+      console.log(this.name);
+    }
+    //声明子类
+    function ChildClass(name,id){
+      //构造函数式继承父类name属性
+      ParentClass.call(this,name);
+      //子类中新增公有属性
+      this.id = id;
+
+      this.test = '1111'
+
+    }
+    // 类式继承  子类原型继承父类
+    ChildClass.prototype = new ParentClass();
+    // 子类原型方法
+    ChildClass.prototype.getId = function(){
+      console.log(this.id);
+    }
+
+    ChildClass.prototype.test = '222'
+
+    var child1 = new ChildClass('Css',1)
+    console.log(child1.__proto__, '111', child1)
+    console.log(child1.test, '我是测试')
+    child1.books.push('图解Css');
+    console.log(child1.books) // ['Html','图解Css']
+    child1.getName()          // Css
+    child1.getId()            // 1
+
+
+    var child2 = new ChildClass('Javascript',2)
+    console.log(child2.books) // ['Html']
+    child2.getName()          // Javascript
+    child2.getId()             // 2
+    /*
+    缺点：感觉是不是很复杂？？？？？写法复杂
+     */
+  </script>
+</body>
+</html>

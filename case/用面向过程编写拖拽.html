@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    #div1{ width: 100px; height: 100px; background: red; position: absolute;top:100px;left: 100px}
+  </style>
+</head>
+<body>
+  <div id="div1">1</div>
+  <script>
+    var oDiv = null
+    var disX = 0
+    var disY = 0
+    window.onload = function(){
+      oDiv = document.getElementById('div1')
+      init()
+    }
+    function init(){
+      oDiv.onmousedown = fnDown
+    }
+    function fnDown(e){
+      var e = e || window.event
+      disX = e.clientX - oDiv.offsetLeft
+      disY = e.clientY - oDiv.offsetTop
+      document.onmousemove = fnMove
+      document.onmouseup = fnUp
+      return false
+    }
+    function fnMove(ev){
+      var ev = ev || window.event
+      oDiv.style.left = ev.clientX - disX + 'px'
+      oDiv.style.top = ev.clientY - disY + 'px'
+    }
+    function fnUp(){
+      document.onmousemove = null
+      document.onmouseup = null
+    }
+  </script>
+</body>
+</html>
